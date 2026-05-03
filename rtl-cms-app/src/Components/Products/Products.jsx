@@ -1,7 +1,7 @@
 import React from 'react'
-
+import ErrorBox from '../ErrorBox/ErrorBox'
 export default function Products() {
   return (
-    <div>Products</div>
+    <div><ErrorBox msg='هیچ محصولی یافت نشد'/></div>
   )
 }
