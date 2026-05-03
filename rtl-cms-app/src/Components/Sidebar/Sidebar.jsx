@@ -5,6 +5,7 @@ import {MdProductionQuantityLimits} from 'react-icons/md'
 import {BiCommentDetail} from 'react-icons/bi'
 import {FiUsers} from 'react-icons/fi'
 import {BsBag,BsCurrencyDollar} from 'react-icons/bs'
+import { Link } from 'react-router-dom'
 export default function Sidebar() {
   return (
     <div className='sidebar'>
@@ -12,23 +13,35 @@ export default function Sidebar() {
 
         <ul className="sidebar-links">
             <li>
-                
-                <a href="#">صفحه اصلی<AiOutlineHome className='icon'/></a>
+                <Link to='/'>
+            
+            صقحه اصلی<AiOutlineHome className='icon'/>
+                </Link>
+               
             </li>
             <li className='active'>
-                <a href="#">محصولات<MdProductionQuantityLimits className='icon'/></a>
+                <Link to='/products'>
+                محصولات<MdProductionQuantityLimits className='icon'/>
+                </Link>
             </li>
             <li>
-                <a href="#">کامنت ها<BiCommentDetail className='icon'/></a>
+                <Link to='/comments'>
+                کامنت ها<BiCommentDetail className='icon'/>
+                </Link>
             </li>
             <li>
-                <a href="#">کاربران<FiUsers className='icon'/></a>
+                <Link to='/users'>کاربران<FiUsers className='icon'/>
+                </Link>
             </li>
             <li>
-                <a href="#">سفارشات<BsBag className='icon'/></a>
+                <Link to='/orders'>سفارشات<BsBag className='icon'/>
+                </Link>
+              
             </li>
             <li>
-                <a href="#">تخفیف ها<BsCurrencyDollar className='icon'/></a>
+                <Link to='/offs'>تخفیف ها<BsCurrencyDollar className='icon'/>
+                </Link>
+                
             </li>
         </ul>
 
