@@ -9,7 +9,7 @@ export default function Products() {
    <AddNewProduct/>
     <div><ErrorBox msg='هیچ محصولی یافت نشد'/></div>
     <ProdcutsTable/>
-    <DeleteModal/>
+    
      </>
   )
 }
