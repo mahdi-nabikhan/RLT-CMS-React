@@ -26,7 +26,7 @@ export default function AddNewProduct() {
                 </div>
                 
             </div>
-            <button className="add-products-submit"></button>
+            <button className="add-products-submit">ثبت</button>
         </form>
     </div>
   )
