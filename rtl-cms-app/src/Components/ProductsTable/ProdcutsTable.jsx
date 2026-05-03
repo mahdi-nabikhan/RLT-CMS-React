@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import "./ProdcutsTable.css";
 import DeleteModal from "./../DeleteModal/DeleteModal";
-
+import DetailsModal from "../DetailsModal/DetailsModal";
 export default function ProductsTable() {
   const [isShowModal, setIsShowModal] = useState(false);
+  const [isShowDetailModal,setIsShowDetailModal]=useState(false)
 
   const deleteModalCancelAction = () => {
     console.log("مدال کنسل شد");
@@ -14,9 +15,12 @@ export default function ProductsTable() {
     console.log("مدال تایید شد");
     setIsShowModal(false);
   };
-
+  const closeDetailModal = ()=>{
+    setIsShowDetailModal(false)
+  }
   return (
     <>
+    
       <table className="products-table">
         <thead>
           <tr className="products-table-heading-tr">
@@ -40,7 +44,7 @@ export default function ProductsTable() {
             <td>92000 تومان</td>
             <td>82</td>
             <td>
-              <button className="products-table-btn">جزییات</button>
+              <button className="products-table-btn" onClick={()=>setIsShowDetailModal(true)}>جزییات</button>
               <button
                 className="products-table-btn"
                 onClick={() => setIsShowModal(true)}
@@ -57,6 +61,9 @@ export default function ProductsTable() {
           submitAction={deleteModalSubmitAction}
           cancelAction={deleteModalCancelAction}
         />
+      )}
+      {isShowDetailModal &&(
+        <DetailsModal onHide={closeDetailModal}/>
       )}
     </>
   );
