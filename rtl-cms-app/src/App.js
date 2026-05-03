@@ -9,6 +9,7 @@ import Orders from './Components/Orders/Orders'
 import Offs from './Components/Offs/Offs'
 import {useRoutes} from 'react-router-dom'
 import routes from './routes'
+import './App.css'
 export default function App() {
   const router = useRoutes(routes)
   return (
