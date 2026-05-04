@@ -11,24 +11,25 @@ export default function ProductsTable() {
   const [isShowDetailsModal, setIsShowDetailsModal] = useState(false);
   const [isShowEditModal, setIsShowEditModal] = useState(false);
   const [allProducts, setAllProducts] = useState([]);
-  const [productID, setProductID] = useState(null)
-  const[mainProductInfos,setMainProductInfos]=useState({})
+  const [productID, setProductID] = useState(null);
+  const [mainProductInfos, setMainProductInfos] = useState({});
 
+  const [productNewTitle, setProductNewTitle] = useState("");
+  const [productNewPrice, setProductNewPrice] = useState("");
+  const [productNewCount, setProductNewCount] = useState("");
+  const [productNewImg, setProductNewImg] = useState("");
+  const [productNewPopularity, setProductNewPopularity] = useState("");
+  const [productNewSale, setProductNewSale] = useState("");
+  const [productNewColors, setProductNewColors] = useState("");
+  
   useEffect(() => {
-    getAllProducts()
+    getAllProducts();
   }, []);
 
   const getAllProducts = () => {
     fetch("http://localhost:8000/api/products/")
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then(products => setAllProducts(products))
-      .catch(err => {
-        console.error("خطا در دریافت محصولات:", err);
-        setAllProducts([]);
-      });
+      .then((res) => res.json())
+      .then((products) => setAllProducts(products));
   };
 
   const deleteModalCancelAction = () => {
@@ -37,20 +38,15 @@ export default function ProductsTable() {
   };
 
   const deleteModalSubmitAction = () => {
+    console.log("مدال تایید شد");
     fetch(`http://localhost:8000/api/products/${productID}`, {
-      method: 'DELETE'
+      method: "DELETE",
     })
-    .then(res => {
-      if (res.ok) {
-        return;  // نیازی به خواندن بدنه نیست
-      }
-      throw new Error('حذف موفق نبود');
-    })
-    .then(() => {
-      setIsShowDeleteModal(false);
-      getAllProducts();
-    })
-    .catch(err => console.error("خطا:", err));
+      .then((res) => res.json())
+      .then((result) => {
+        setIsShowDeleteModal(false);
+        getAllProducts();
+      });
   };
 
   const closeDetailsmodal = () => {
@@ -60,6 +56,30 @@ export default function ProductsTable() {
 
   const updateProductInfos = (event) => {
     event.preventDefault();
+
+    const productsNewInfos = {
+      title: productNewTitle,
+      price: productNewPrice,
+      count: productNewCount,
+      img: productNewImg,
+      popularity: productNewPopularity,
+      sale: productNewSale,
+      colors: productNewColors,
+    }
+
+    fetch(`http://localhost:8000/api/products/${productID}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(productsNewInfos)
+    }).then(res => res.json())
+    .then(result => {
+      console.log(result);
+      getAllProducts()
+      setIsShowEditModal(false)
+    })
+
     console.log("محصول ویرایش شد");
   };
 
@@ -92,23 +112,35 @@ export default function ProductsTable() {
                 <td>
                   <button
                     className="products-table-btn"
-                    onClick={() => {setIsShowDetailsModal(true) 
-                    setMainProductInfos(product)} }
+                    onClick={() => {
+                      setIsShowDetailsModal(true);
+                      setMainProductInfos(product);
+                    }}
                   >
                     جزییات
                   </button>
                   <button
                     className="products-table-btn"
                     onClick={() => {
-                      setIsShowDeleteModal(true)
-                      setProductID(product.id)
+                      setIsShowDeleteModal(true);
+                      setProductID(product.id);
                     }}
                   >
                     حذف
                   </button>
                   <button
                     className="products-table-btn"
-                    onClick={() => setIsShowEditModal(true)}
+                    onClick={() => {
+                      setIsShowEditModal(true);
+                      setProductID(product.id)
+                      setProductNewTitle(product.title)
+                      setProductNewPrice(product.price)
+                      setProductNewCount(product.count)
+                      setProductNewImg(product.img)
+                      setProductNewPopularity(product.popularity)
+                      setProductNewSale(product.sale)
+                      setProductNewColors(product.colors)
+                    }}
                   >
                     ویرایش
                   </button>
@@ -127,20 +159,27 @@ export default function ProductsTable() {
           cancelAction={deleteModalCancelAction}
         />
       )}
-      {isShowDetailsModal && <DetailsModal onHide={closeDetailsmodal}>
-      <table className="cms-table">
-            <tr>
+      {isShowDetailsModal && (
+        <DetailsModal onHide={closeDetailsmodal}>
+          <table className="cms-table">
+            <thead>
+              <tr>
                 <th>محبوبیت</th>
                 <th>فروش</th>
                 <th>رنگ بندی</th>
-            </tr>
-            <tr>
-                <td>{mainProductInfos.popularity} </td>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>{mainProductInfos.popularity}</td>
                 <td>{mainProductInfos.sale}</td>
                 <td>{mainProductInfos.colors}</td>
-            </tr>
-        </table>   
-        </DetailsModal>}
+              </tr>
+            </tbody>
+          </table>
+        </DetailsModal>
+      )}
       {isShowEditModal && (
         <EditModal
           onClose={() => setIsShowEditModal(false)}
@@ -154,6 +193,21 @@ export default function ProductsTable() {
               type="text"
               placeholder="عنوان جدید را وارد کنید"
               className="edit-product-input"
+              value={productNewTitle}
+              onChange={(event) => setProductNewTitle(event.target.value)}
+            />
+          </div>
+          
+          <div className="edit-proructs-form-group">
+            <span>
+              <AiOutlineDollarCircle />
+            </span>
+            <input
+              type="text"
+              placeholder="قیمت جدید را وارد کنید"
+              className="edit-product-input"
+              value={productNewPrice}
+              onChange={(event) => setProductNewPrice(event.target.value)}
             />
           </div>
           <div className="edit-proructs-form-group">
@@ -162,8 +216,10 @@ export default function ProductsTable() {
             </span>
             <input
               type="text"
-              placeholder="عنوان جدید را وارد کنید"
+              placeholder="موجودی جدید را وارد کنید"
               className="edit-product-input"
+              value={productNewCount}
+              onChange={(event) => setProductNewCount(event.target.value)}
             />
           </div>
           <div className="edit-proructs-form-group">
@@ -172,8 +228,10 @@ export default function ProductsTable() {
             </span>
             <input
               type="text"
-              placeholder="عنوان جدید را وارد کنید"
+              placeholder="آدرس کاور جدید را وارد کنید"
               className="edit-product-input"
+              value={productNewImg}
+              onChange={(event) => setProductNewImg(event.target.value)}
             />
           </div>
           <div className="edit-proructs-form-group">
@@ -182,8 +240,34 @@ export default function ProductsTable() {
             </span>
             <input
               type="text"
-              placeholder="عنوان جدید را وارد کنید"
+              placeholder="محبوبیت جدید را وارد کنید"
               className="edit-product-input"
+              value={productNewPopularity}
+              onChange={(event) => setProductNewPopularity(event.target.value)}
+            />
+          </div>
+          <div className="edit-proructs-form-group">
+            <span>
+              <AiOutlineDollarCircle />
+            </span>
+            <input
+              type="text"
+              placeholder="میزان فروش جدید را وارد کنید"
+              className="edit-product-input"
+              value={productNewSale}
+              onChange={(event) => setProductNewSale(event.target.value)}
+            />
+          </div>
+          <div className="edit-proructs-form-group">
+            <span>
+              <AiOutlineDollarCircle />
+            </span>
+            <input
+              type="text"
+              placeholder="تعداد رنگ بندی جدید را وارد کنید"
+              className="edit-product-input"
+              value={productNewColors}
+              onChange={(event) => setProductNewColors(event.target.value)}
             />
           </div>
         </EditModal>
