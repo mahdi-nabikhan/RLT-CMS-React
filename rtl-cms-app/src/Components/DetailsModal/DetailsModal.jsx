@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import './DetailsModal.css'
-export default function DetailsModal({onHide}) {
+export default function DetailsModal({onHide,children}) {
   useEffect(
     ()=>{
       const checkKey =(event)=>{
@@ -16,18 +16,8 @@ export default function DetailsModal({onHide}) {
   return (
     <div className="modal-parent active">
     <div className="detail-modal ">
-        <table className="cms-table">
-            <tr>
-                <th>اسم</th>
-                <th>قیمت</th>
-                <th>محبوبیت</th>
-            </tr>
-            <tr>
-                <td>لپ تاب</td>
-                <td>14</td>
-                <td>91</td>
-            </tr>
-        </table>
+      {children}
+       
         
     </div>
     </div>

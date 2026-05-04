@@ -1,9 +1,9 @@
-const mysql = require("mysql");
+const mysql = require('mysql2');
 
 const SabzlearnShopDB = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "",
+  password: "mitinabi7",
   database: "sabzlearn_shop",
 });
 
