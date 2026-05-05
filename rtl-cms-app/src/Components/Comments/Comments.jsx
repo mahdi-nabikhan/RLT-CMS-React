@@ -1,29 +1,51 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ErrorBox from "../ErrorBox/ErrorBox";
 import DetailsModal from "../DetailsModal/DetailsModal";
 import DeleteModal from "../DeleteModal/DeleteModal";
 
 import './Comments.css'
+import EditModal from "../EditModal/EditModal";
 
 export default function Comments() {
   const [allComments, setAllComments] = useState([]);
   const [isShowDetailsModal, setIsShowDetailsModal] = useState(false);
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
   const [mainCommentBody, setMainCommentBody] = useState("");
-
-  useEffect(() => {
+  const [commentID, setCommentID] = useState(null)
+  const [isShowEditModal,setisShowEditModal]=useState('')
+  const closeEditModal = () => setisShowEditModal(false)
+  function getAllComments() {
     fetch("http://localhost:8000/api/comments")
       .then((res) => res.json())
       .then((comments) => setAllComments(comments));
-  }, []);
+  }
+  useEffect(()=>{
+    getAllComments()
+  },[])
 
+  const updateComment=(event)=>{
+    event.preventDefault()
+    fetch(`http://localhost:8000/api/comments/${commentID}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+        body:mainCommentBody
+    })}).then(res => res.json()).then(result =>{
+      console.log(result)
+      setisShowEditModal(false)
+      getAllComments()
+    })
+    setisShowEditModal(false)
+  }
   const closeDetailsModal = () => setIsShowDetailsModal(false);
   const closeDeleteModal = () => setIsShowDeleteModal(false);
 
   const deleteComment = () => {
     console.log('کامنت با موفقیت ریمو شد');
-    setIsShowDeleteModal(false)
-  }
+    fetch(`http://localhost:8000/api/comments/${commentID}`, {
+      method: 'DELETE'
+    }).then(res => res.json()).then(result => {
+      console.log(result)
+      setIsShowDeleteModal(false)
+       getAllComments()
+    })}
 
   return (
     <div className="cms-main">
@@ -57,8 +79,15 @@ export default function Comments() {
                 <td>{comment.date}</td>
                 <td>{comment.hour}</td>
                 <td>
-                  <button onClick={() => setIsShowDeleteModal(true)}>حذف</button>
-                  <button>ویرایش</button>
+                  <button onClick={() => {
+                    setIsShowDeleteModal(true)
+                    setCommentID(comment.id)
+                  }}>حذف</button>
+                  <button onClick={()=>{
+                    setisShowEditModal(true)
+                    setMainCommentBody(comment.body)
+                    setCommentID(comment.id)
+                  }}>ویرایش</button>
                   <button>پاسخ</button>
                   <button>تایید</button>
                 </td>
@@ -85,6 +114,19 @@ export default function Comments() {
           />
         )
       }
+      {isShowEditModal && (
+        <EditModal 
+        onClose={closeDeleteModal}
+        onSubmit = {updateComment}
+        >
+        
+          
+          <textarea onChange={event =>setMainCommentBody(event.target.value)} name="" id="" cols="30" rows="10">
+              {mainCommentBody}
+          </textarea>
+
+        </EditModal>
+      )}
     </div>
   );
 }
