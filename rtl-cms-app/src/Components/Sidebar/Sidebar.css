@@ -2,10 +2,7 @@
     position: fixed;
     background-color: var(--blue);
     height: 100vh;
-    top: 0;
-    right: 0;
-    width: 280px;
-    left: auto;
+    flex: 1;
 }
 
 .sidebar-title {
@@ -20,12 +17,12 @@
     margin-top: 20px;
 }
 
-.sidebar-links li {
+.sidebar-links a {
     position: relative;
     padding: 15px;
 }
 
-.sidebar-links li a {
+.sidebar-links a {
     width: 100%;
     color: var(--white);
     text-decoration: none;
@@ -35,10 +32,19 @@
     font-size: 1.3rem;
 }
 
-.sidebar-links li.active {
+.sidebar-links a:hover {
+    background-color: #391588;
+    color: var(--white);
+}
+
+.icon {
+    margin-left: 8px;
+}
+
+.sidebar-links a.active {
     background-color: #391588;
 }
 
-.sidebar-links li:first-child {
+.sidebar-links a:first-child {
     margin-bottom: 20px;
 }
