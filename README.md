@@ -34,3 +34,18 @@ Based on the latest commits, the following functionality has been implemented:
 ## 📁 Project Structure
 
 The repository is organized into two main working directories:
+
+
+
+
+
+## 🚀 Getting Started
+
+To get a local copy of the frontend up and running, follow these simple steps.
+
+### Prerequisites
+
+- **Node.js** (v16 or later recommended)
+- npm (usually comes with Node.js)
+  ```sh
+  npm install npm@latest -g
